@@ -4,20 +4,34 @@ import {Categories} from "../components/Categories";
 import {Row} from "../layout/Row";
 
 export function Catalog({isPage, searchInput}) {
+    const [searchField, setSearchField] = useState(searchInput ? searchInput : "")
+    const [searchFieldToSend, setSearchFieldToSend] = useState("")
     const [catalog, setCatalog] = useState([])
     const [loading, setLoading] = useState(false)
 
     const [categoryId, setCategoryId] = useState(0)
-    const [offset, setOffset] = useState(6)
+    const [offset, setOffset] = useState(0)
 
+    const [showMoreButton, setShowMoreButton] = useState(true)
+
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault()
+            setCatalog([])
+            setSearchFieldToSend(searchField)
+        }
+    }
 
     useEffect(() => {
         const loadCatalog = async () => {
             setLoading(true)
             try {
-                await fetch(`http://localhost:7070/api/items?offset=${offset}${categoryId > 0 ? `&categoryId=${categoryId}` : ""}${searchInput ? `&q=${searchInput}` : ""}`)
+                await fetch(`http://localhost:7070/api/items?categoryId=${categoryId}&offset=${offset}&q=${isPage ? searchFieldToSend : ""}`)
                     .then(response => response.json())
-                    .then(response => setCatalog(response))
+                    .then(response => {
+                        setCatalog([...catalog, ...response])
+                        response.length < 6 ? setShowMoreButton(false) : setShowMoreButton(true)
+                    })
             } catch (e) {
 
             } finally {
@@ -27,7 +41,7 @@ export function Catalog({isPage, searchInput}) {
         }
         loadCatalog()
 
-    }, [categoryId, offset])
+    }, [categoryId, offset, searchFieldToSend])
 
     const [categories, setCategories] = useState([])
 
@@ -47,28 +61,36 @@ export function Catalog({isPage, searchInput}) {
 
     }, [])
 
-    return (
-        <section className="catalog">
+    const handleSetCategoryId = (id) => {
+        setCategoryId(id)
+        setOffset(0)
+        setCatalog([])
+    }
+
+    return (<section className="catalog">
             <h2 className="text-center">Каталог</h2>
 
             {loading && <div className="preloader"/>}
 
-            {isPage &&
-                <form className="catalog-search-form form-inline">
-                    <input className="form-control" placeholder="Поиск" value={searchInput}/>
-                </form>}
+            {isPage && <form className="catalog-search-form form-inline">
+                <input className="form-control" placeholder="Поиск" value={searchField}
+                       onChange={(e) => setSearchField(e.target.value)}
+                       onKeyDown={handleKeyPress}/>
+            </form>}
 
             {!loading && <Categories categories={categories}
                                      categoryId={categoryId}
-                                     setCategoryId={setCategoryId}/>}
+                                     setCategoryId={handleSetCategoryId}/>}
 
             {!loading && <Row>{catalog.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>}
 
-            <div className="text-center">
+            {!loading && showMoreButton && <div className="text-center">
                 <button className="btn btn-outline-primary"
-                        onClick={() => setOffset(prevState => prevState + 6)}>Загрузить ещё
+                        onClick={() => setOffset(prevState => prevState + 6)}
+                >
+                    Загрузить ещё
                 </button>
-            </div>
+            </div>}
         </section>
 
     )
