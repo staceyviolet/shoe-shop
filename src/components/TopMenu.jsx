@@ -2,7 +2,7 @@ import {Link, NavLink} from "react-router-dom";
 import {useNavigate} from "react-router";
 import {useState} from "react";
 
-export function TopMenu() {
+export function TopMenu({searchInput, setSearchInput}) {
     const navigate = useNavigate()
 
     const handleCartClick = () => {
@@ -10,10 +10,9 @@ export function TopMenu() {
     }
 
     const [showSearch, setShowSearch] = useState(false)
-    const [searchValue, setSearchValue] = useState('')
 
     const handleSearchClick = () => {
-        if (searchValue) {
+        if (searchInput) {
             navigate("/catalog")
         } else {
             setShowSearch(!showSearch)
@@ -52,8 +51,8 @@ export function TopMenu() {
                     </div>
                     <form data-id="search-form"
                           className={`header-controls-search-form form-inline ${!showSearch ? 'invisible' : ''}`}>
-                        <input className="form-control" placeholder="Поиск" value={searchValue}
-                               onChange={(e) => setSearchValue(e.target.value)}/>
+                        <input className="form-control" placeholder="Поиск" value={searchInput}
+                               onChange={(e) => setSearchInput(e.target.value)}/>
                     </form>
                 </div>
             </div>

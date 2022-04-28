@@ -3,24 +3,21 @@ import {ProductCard} from "../components/ProductCard";
 import {Categories} from "../components/Categories";
 import {Row} from "../layout/Row";
 
-export function Catalog() {
+export function Catalog({isPage, searchInput}) {
     const [catalog, setCatalog] = useState([])
     const [loading, setLoading] = useState(false)
 
     const [categoryId, setCategoryId] = useState(0)
     const [offset, setOffset] = useState(6)
 
-    useEffect(() => {
-        const urlNoCat = `http://localhost:7070/api/items`
-        const urlWithCat = `http://localhost:7070/api/items?categoryId=${categoryId}`
-        const urlWithOffset = `http://localhost:7070/api/items?offset=${offset}`
 
+    useEffect(() => {
         const loadCatalog = async () => {
             setLoading(true)
             try {
-                await fetch(`http://localhost:7070/api/items?categoryId=${categoryId}&offset=${offset}`)
+                await fetch(`http://localhost:7070/api/items?offset=${offset}${categoryId > 0 ? `&categoryId=${categoryId}` : ""}${searchInput ? `&q=${searchInput}` : ""}`)
                     .then(response => response.json())
-                    .then(response => setCatalog(prevState => prevState.concat(response)))
+                    .then(response => setCatalog(response))
             } catch (e) {
 
             } finally {
@@ -53,11 +50,24 @@ export function Catalog() {
     return (
         <section className="catalog">
             <h2 className="text-center">Каталог</h2>
+
             {loading && <div className="preloader"/>}
-            {!loading && <Categories categories={categories} onClick={setCategoryId}/>}
+
+            {isPage &&
+                <form className="catalog-search-form form-inline">
+                    <input className="form-control" placeholder="Поиск" value={searchInput}/>
+                </form>}
+
+            {!loading && <Categories categories={categories}
+                                     categoryId={categoryId}
+                                     setCategoryId={setCategoryId}/>}
+
             {!loading && <Row>{catalog.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>}
+
             <div className="text-center">
-                <button className="btn btn-outline-primary" onClick={() => setOffset(prevState => prevState + 6)}>Загрузить ещё</button>
+                <button className="btn btn-outline-primary"
+                        onClick={() => setOffset(prevState => prevState + 6)}>Загрузить ещё
+                </button>
             </div>
         </section>
 

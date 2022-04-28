@@ -1,21 +1,30 @@
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 
-export function Categories({categories, onClick}) {
+export function Categories({categories, categoryId, setCategoryId}) {
     return (
         <ul className="catalog-categories nav justify-content-center">
             <li className="nav-item">
-                <NavLink className={`nav-link`} to={`/#0`} onClick={() => {
-                    onClick(0)
-                }}>Все</NavLink>
+                <Link className={categoryId !== 0 ? "nav-link" : "nav-link active"}
+                      to={`#`}
+                      onClick={() => {
+                          setCategoryId(0)
+                      }}>
+                    Все
+                </Link>
             </li>
+
             {categories.map(category => {
-                return <li key={category.id} className="nav-item">
-                    <NavLink className={`nav-link`}
-                             to={`#${category.id}`}
-                             onClick={() => {
-                                 onClick(category.id)
-                             }}>{category.title}</NavLink>
-                </li>
+                return (
+                    <li key={category.id} className={"nav-item"}>
+                        <Link className={categoryId !== category.id ? "nav-link" : "nav-link active"}
+                              to={`#`}
+                              onClick={() => {
+                                  setCategoryId(category.id)
+                              }} strict>
+                            {category.title}
+                        </Link>
+                    </li>
+                )
             })}
         </ul>
     )

@@ -9,7 +9,7 @@ export function HomePage() {
         <Row>
             <Col>
                 <Banner/>
-                <TopSales />
+                <TopSales/>
                 <Catalog/>
             </Col>
         </Row>
