@@ -5,7 +5,7 @@ import {Row} from "../layout/Row";
 
 export function Catalog({isPage, searchInput}) {
     const [searchField, setSearchField] = useState(searchInput ? searchInput : "")
-    const [searchFieldToSend, setSearchFieldToSend] = useState("")
+    const [searchFieldToSend, setSearchFieldToSend] = useState(searchField)
     const [catalog, setCatalog] = useState([])
     const [loading, setLoading] = useState(false)
 
@@ -25,8 +25,10 @@ export function Catalog({isPage, searchInput}) {
     useEffect(() => {
         const loadCatalog = async () => {
             setLoading(true)
+            const fetchUrl = `http://localhost:7070/api/items?categoryId=${categoryId}&offset=${offset}&q=${isPage ? searchFieldToSend : ""}`
+
             try {
-                await fetch(`http://localhost:7070/api/items?categoryId=${categoryId}&offset=${offset}&q=${isPage ? searchFieldToSend : ""}`)
+                await fetch(fetchUrl)
                     .then(response => response.json())
                     .then(response => {
                         setCatalog([...catalog, ...response])
@@ -67,7 +69,10 @@ export function Catalog({isPage, searchInput}) {
         setCatalog([])
     }
 
-    return (<section className="catalog">
+    useEffect(() => setSearchField(searchInput), [searchInput])
+
+    return (
+        <section className="catalog">
             <h2 className="text-center">Каталог</h2>
 
             {loading && <div className="preloader"/>}
@@ -92,7 +97,6 @@ export function Catalog({isPage, searchInput}) {
                 </button>
             </div>}
         </section>
-
     )
 }
 

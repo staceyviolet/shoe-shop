@@ -17,7 +17,6 @@ import {useState} from "react";
 
 function App() {
     const [searchInput, setSearchInput] = useState('')
-
     return (
         <GlobalState>
             <Header searchInput={searchInput} setSearchInput={setSearchInput}/>

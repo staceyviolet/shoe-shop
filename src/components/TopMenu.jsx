@@ -14,6 +14,7 @@ export function TopMenu({searchInput, setSearchInput}) {
     const handleSearchClick = () => {
         if (searchInput) {
             navigate("/catalog")
+
         } else {
             setShowSearch(!showSearch)
         }
