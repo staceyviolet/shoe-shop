@@ -1,6 +1,5 @@
 import { useDispatch }         from 'react-redux';
 import { addToCart }           from '../globalState/actions/actionCreators';
-import { ADD_TO_CART }         from '../globalState/actions/actionTypes';
 import { Col }                 from '../layout/Col';
 import { Banner }              from '../components/Banner';
 import { Row }                 from '../layout/Row';

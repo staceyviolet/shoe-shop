@@ -1,9 +1,9 @@
-import { ofType }                                                       from 'redux-observable';
-import { ajax }                                                         from 'rxjs/ajax';
-import { map, tap, retry, filter, debounceTime, switchMap, catchError } from 'rxjs/operators';
-import { CHANGE_SEARCH_FIELD, LOAD_CATALOG_REQUEST }                    from '../actions/actionTypes';
-import { loadCatalogRequest, loadCatalogSuccess, loadCatalogFailure }   from '../actions/actionCreators';
-import { of }                                                           from 'rxjs';
+import { ofType }                                                     from 'redux-observable';
+import { ajax }                                                       from 'rxjs/ajax';
+import { map, retry, filter, debounceTime, switchMap, catchError }    from 'rxjs/operators';
+import { CHANGE_SEARCH_FIELD, LOAD_CATALOG_REQUEST }                  from '../actions/actionTypes';
+import { loadCatalogRequest, loadCatalogSuccess, loadCatalogFailure } from '../actions/actionCreators';
+import { of }                                                         from 'rxjs';
 
 export const changeSearchEpic = action$ => action$.pipe(
     ofType(CHANGE_SEARCH_FIELD),

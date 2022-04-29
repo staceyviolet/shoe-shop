@@ -44,7 +44,7 @@ export function Catalog({ isPage, searchInput }) {
     useEffect(() => {handleSearch()}, [searchField])
 
     const handleLoadCatalog = () => {
-        dispatch(loadCatalogRequest(categoryId, offset, ''));
+        dispatch(loadCatalogRequest(categoryId, offset, searchField));
     };
 
     useEffect(() => {

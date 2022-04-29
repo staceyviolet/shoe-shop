@@ -36,7 +36,7 @@ export default function loadCatalogReducer(state = initialState, action) {
                 error: null,
             };
         case CHANGE_SEARCH_FIELD:
-            const { category, offset, search } = action.payload;
+            const { search } = action.payload;
             return {
                 ...state,
                 search
