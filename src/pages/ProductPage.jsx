@@ -1,31 +1,34 @@
-import {Col} from "../layout/Col";
-import {Banner} from "../components/Banner";
-import {Row} from "../layout/Row";
-import {useEffect, useState} from "react";
-import {useParams} from "react-router";
+import { useDispatch }         from 'react-redux';
+import { addToCart }           from '../globalState/actions/actionCreators';
+import { ADD_TO_CART }         from '../globalState/actions/actionTypes';
+import { Col }                 from '../layout/Col';
+import { Banner }              from '../components/Banner';
+import { Row }                 from '../layout/Row';
+import { useEffect, useState } from 'react';
+import { useParams }           from 'react-router';
 
 export function ProductPage() {
-    const {productId} = useParams()
+    const { productId } = useParams()
     const [product, setProduct] = useState({
-        "id": 0,
-        "category": 0,
-        "title": "",
-        "images": [],
-        "sku": "",
-        "manufacturer": "",
-        "color": "",
-        "material": "",
-        "reason": "",
-        "season": "",
-        "heelSize": "",
-        "price": 0,
-        "sizes": [
-            {
-                'avalible': false,
-                "size": ""
-            }
-        ]
-    })
+                                               'id': 0,
+                                               'category': 0,
+                                               'title': '',
+                                               'images': [],
+                                               'sku': '',
+                                               'manufacturer': '',
+                                               'color': '',
+                                               'material': '',
+                                               'reason': '',
+                                               'season': '',
+                                               'heelSize': '',
+                                               'price': 0,
+                                               'sizes': [
+                                                   {
+                                                       'avalible': false,
+                                                       'size': ''
+                                                   }
+                                               ]
+                                           })
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -53,6 +56,18 @@ export function ProductPage() {
     }
     const decrement = () => {
         setCounter(prevState => prevState !== 0 ? prevState - 1 : prevState)
+    }
+
+    const dispatch = useDispatch()
+
+    const handleAdd = (productId, product, counter, sizeSelected) => {
+        dispatch(addToCart({
+                               'id': productId,
+                               'product': product,
+                               'count': counter,
+                               size: sizeSelected
+
+                           }))
     }
 
     return (
@@ -98,26 +113,30 @@ export function ProductPage() {
                             </table>
                             <div className="text-center">
                                 <p>Размеры в наличии: {product.sizes
-                                    .filter(size => size.avalible === true)
-                                    .map(size => {
-                                        return <span
-                                            className={`catalog-item-size ${sizeSelected === size.size && 'selected'}`}
-                                            onClick={() => setSizeSelected(size.size)}>{size.size}</span>
-                                    })} </p>
+                                                              .filter(size => size.avalible === true)
+                                                              .map(size => {
+                                                                  return <span
+                                                                      className={`catalog-item-size ${sizeSelected === size.size && 'selected'}`}
+                                                                      onClick={() => setSizeSelected(size.size)}>{size.size}</span>
+                                                              })} </p>
 
                                 {!product.sizes.filter(size => size.avalible === true).length ? null :
-                                    <p>Количество: <span className="btn-group btn-group-sm pl-2">
+                                 <p>Количество: <span className="btn-group btn-group-sm pl-2">
                                         <button className="btn btn-secondary" onClick={decrement}>-</button>
                                         <span className="btn btn-outline-primary">{counter}</span>
                                         <button className="btn btn-secondary" onClick={increment}>+</button>
                                     </span>
-                                    </p>}
+                                 </p>}
 
                             </div>
 
                             {!product.sizes.filter(size => size.avalible === true).length ? null :
-                                <button disabled={!sizeSelected} className="btn btn-danger btn-block btn-lg">В корзину
-                                </button>}
+                             <button disabled={!sizeSelected}
+                                     onClick={() => handleAdd(productId, product, counter, sizeSelected)}
+                                     className="btn btn-danger btn-block btn-lg">
+                                 В корзину
+                             </button>
+                            }
                         </div>
                     </Row>
                 </section>

@@ -1,24 +1,26 @@
-import {Header} from "./layout/Header";
-import {Body} from "./layout/Body";
-import {Footer} from "./layout/Footer";
-import {Route} from "react-router-dom";
-import {Routes} from "react-router";
-import {HomePage} from "./pages/HomePage";
-import {About} from "./pages/About";
-import {Catalog} from "./pages/Catalog";
-import {Cart} from "./pages/Cart";
-import {Contacts} from "./pages/Contacts";
-import {NotFound} from "./pages/NotFound";
+import { useState } from 'react';
+import { Provider } from 'react-redux';
+import { Route }    from 'react-router-dom';
+import { Routes }   from 'react-router';
+import store        from './globalState/store';
+
+import { Header }      from './layout/Header';
+import { Body }        from './layout/Body';
+import { Footer }      from './layout/Footer';
+import { HomePage }    from './pages/HomePage';
+import { About }       from './pages/About';
+import { Catalog }     from './pages/Catalog';
+import { Cart }        from './pages/Cart';
+import { Contacts }    from './pages/Contacts';
+import { NotFound }    from './pages/NotFound';
+import { ProductPage } from './pages/ProductPage';
 
 import './style.css';
-import {ProductPage} from "./pages/ProductPage";
-import GlobalState from "./context/GlobalState";
-import {useState} from "react";
 
 function App() {
     const [searchInput, setSearchInput] = useState('')
     return (
-        <GlobalState>
+        <Provider store={store}>
             <Header searchInput={searchInput} setSearchInput={setSearchInput}/>
             <Body>
                 <Routes>
@@ -32,7 +34,7 @@ function App() {
                 </Routes>
             </Body>
             <Footer/>
-        </GlobalState>
+        </Provider>
     )
 }
 

@@ -1,8 +1,19 @@
-import {Row} from "../layout/Row";
-import {Col} from "../layout/Col";
-import {Banner} from "../components/Banner";
+import { useDispatch, useSelector } from 'react-redux';
+import { removeFromCart }           from '../globalState/actions/actionCreators';
+import { Row }                      from '../layout/Row';
+import { Col }                      from '../layout/Col';
+import { Banner }                   from '../components/Banner';
 
 export function Cart() {
+    const storeItems = useSelector((store) => store.cart.cartItems)
+    const totalOrderSum = !!storeItems.length ? storeItems.map(item => item.product.price).reduce((x, y) => x + y) : 0
+
+    const dispatch = useDispatch()
+
+    const handleRemove = (itemId) => {
+        dispatch(removeFromCart(itemId))
+    }
+
     return (
         <Row>
             <Col>
@@ -22,27 +33,33 @@ export function Cart() {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td scope="row">1</td>
-                            <td><a href="/products/1.html">Босоножки 'MYER'</a></td>
-                            <td>18 US</td>
-                            <td>1</td>
-                            <td>34 000 руб.</td>
-                            <td>34 000 руб.</td>
-                            <td>
-                                <button className="btn btn-outline-danger btn-sm">Удалить</button>
-                            </td>
-                        </tr>
+                        {!!storeItems.length && storeItems.map(item => {
+                            return (
+                                <tr>
+                                    <td scope="row">1</td>
+                                    <td><a href="/products/1.html">{item.product.title}</a></td>
+                                    <td>{item.size}</td>
+                                    <td>{item.count}</td>
+                                    <td>{item.product.price}</td>
+                                    <td>{item.product.price}</td>
+                                    <td>
+                                        <button className="btn btn-outline-danger btn-sm"
+                                                onClick={() => handleRemove(item.id)}>Удалить
+                                        </button>
+                                    </td>
+                                </tr>
+                            )
+                        })}
                         <tr>
                             <td colSpan="5" className="text-right">Общая стоимость</td>
-                            <td>34 000 руб.</td>
+                            <td>{totalOrderSum}</td>
                         </tr>
                         </tbody>
                     </table>
                 </section>
                 <section className="order">
                     <h2 className="text-center">Оформить заказ</h2>
-                    <div className="card" style={{maxWidth: '30rem', margin: '0 auto'}}>
+                    <div className="card" style={{ maxWidth: '30rem', margin: '0 auto' }}>
                         <form className="card-body">
                             <div className="form-group">
                                 <label htmlFor="phone">Телефон</label>

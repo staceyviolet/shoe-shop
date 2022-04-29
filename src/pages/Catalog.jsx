@@ -1,50 +1,16 @@
-import {useEffect, useState} from "react";
-import {ProductCard} from "../components/ProductCard";
-import {Categories} from "../components/Categories";
-import {Row} from "../layout/Row";
+import { useEffect, useState }                   from 'react';
+import { ProductCard }                           from '../components/ProductCard';
+import { Categories }                            from '../components/Categories';
+import { Row }                                   from '../layout/Row';
+import { changeSearchField, loadCatalogRequest } from '../globalState/actions/actionCreators';
+import { useDispatch, useSelector }              from 'react-redux';
 
-export function Catalog({isPage, searchInput}) {
-    const [searchField, setSearchField] = useState(searchInput ? searchInput : "")
-    const [searchFieldToSend, setSearchFieldToSend] = useState(searchField)
-    const [catalog, setCatalog] = useState([])
-    const [loading, setLoading] = useState(false)
-
+export function Catalog({ isPage, searchInput }) {
+    const [searchField, setSearchField] = useState(searchInput ? searchInput : '')
     const [categoryId, setCategoryId] = useState(0)
     const [offset, setOffset] = useState(0)
 
     const [showMoreButton, setShowMoreButton] = useState(true)
-
-    const handleKeyPress = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault()
-            setCatalog([])
-            setSearchFieldToSend(searchField)
-        }
-    }
-
-    useEffect(() => {
-        const loadCatalog = async () => {
-            setLoading(true)
-            const fetchUrl = `http://localhost:7070/api/items?categoryId=${categoryId}&offset=${offset}&q=${isPage ? searchFieldToSend : ""}`
-
-            try {
-                await fetch(fetchUrl)
-                    .then(response => response.json())
-                    .then(response => {
-                        setCatalog([...catalog, ...response])
-                        response.length < 6 ? setShowMoreButton(false) : setShowMoreButton(true)
-                    })
-            } catch (e) {
-
-            } finally {
-                setLoading(false)
-            }
-
-        }
-        loadCatalog()
-
-    }, [categoryId, offset, searchFieldToSend])
-
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
@@ -66,10 +32,24 @@ export function Catalog({isPage, searchInput}) {
     const handleSetCategoryId = (id) => {
         setCategoryId(id)
         setOffset(0)
-        setCatalog([])
     }
 
-    useEffect(() => setSearchField(searchInput), [searchInput])
+    const { catalogItems, loading, error, search } = useSelector(state => state.catalog);
+    const dispatch = useDispatch();
+
+    const handleSearch = () => {
+        dispatch(changeSearchField(categoryId, offset, searchField));
+    };
+
+    useEffect(() => {handleSearch()}, [searchField])
+
+    const handleLoadCatalog = () => {
+        dispatch(loadCatalogRequest(categoryId, offset, ''));
+    };
+
+    useEffect(() => {
+        handleLoadCatalog()
+    }, [categoryId, offset])
 
     return (
         <section className="catalog">
@@ -78,16 +58,15 @@ export function Catalog({isPage, searchInput}) {
             {loading && <div className="preloader"/>}
 
             {isPage && <form className="catalog-search-form form-inline">
-                <input className="form-control" placeholder="Поиск" value={searchField}
-                       onChange={(e) => setSearchField(e.target.value)}
-                       onKeyDown={handleKeyPress}/>
+                <input className="form-control" placeholder="Поиск" value={search}
+                       onChange={(e) => setSearchField(e.target.value)}/>
             </form>}
 
             {!loading && <Categories categories={categories}
                                      categoryId={categoryId}
                                      setCategoryId={handleSetCategoryId}/>}
 
-            {!loading && <Row>{catalog.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>}
+            {!loading && <Row>{catalogItems.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>}
 
             {!loading && showMoreButton && <div className="text-center">
                 <button className="btn btn-outline-primary"

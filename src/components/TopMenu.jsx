@@ -1,8 +1,9 @@
-import {Link, NavLink} from "react-router-dom";
-import {useNavigate} from "react-router";
-import {useState} from "react";
+import { useSelector }   from 'react-redux';
+import { Link, NavLink } from 'react-router-dom';
+import { useNavigate }   from 'react-router';
+import { useState }      from 'react';
 
-export function TopMenu({searchInput, setSearchInput}) {
+export function TopMenu({ searchInput, setSearchInput }) {
     const navigate = useNavigate()
 
     const handleCartClick = () => {
@@ -13,12 +14,14 @@ export function TopMenu({searchInput, setSearchInput}) {
 
     const handleSearchClick = () => {
         if (searchInput) {
-            navigate("/catalog")
+            navigate('/catalog')
 
         } else {
             setShowSearch(!showSearch)
         }
     }
+
+    const itemsInCart = useSelector((store) => store.cart.cartItems).length
 
     return (
         <nav className="navbar navbar-expand-sm navbar-light bg-light">
@@ -46,7 +49,7 @@ export function TopMenu({searchInput, setSearchInput}) {
                              className="header-controls-pic header-controls-search"
                              onClick={handleSearchClick}/>
                         <div className="header-controls-pic header-controls-cart" onClick={handleCartClick}>
-                            <div className="header-controls-cart-full">1</div>
+                            {!!itemsInCart && <div className='header-controls-cart-full'>{itemsInCart}</div>}
                             <div className="header-controls-cart-menu"/>
                         </div>
                     </div>
