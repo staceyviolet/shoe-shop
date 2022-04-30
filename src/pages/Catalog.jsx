@@ -6,7 +6,6 @@ import { changeSearchField, loadCatalogRequest } from '../globalState/actions/ac
 import { useDispatch, useSelector }              from 'react-redux';
 
 export function Catalog({ isPage, searchInput }) {
-    const [searchField, setSearchField] = useState(searchInput ? searchInput : '')
     const [categoryId, setCategoryId] = useState(0)
     const [offset, setOffset] = useState(0)
 
@@ -16,7 +15,7 @@ export function Catalog({ isPage, searchInput }) {
     useEffect(() => {
         const loadCategories = async () => {
             try {
-                await fetch(`http://localhost:7070/api/categories`)
+                await fetch(`${process.env.REACT_APP_LOAD_CATEGORIES_URL}`)
                     .then(response => response.json())
                     .then(response => setCategories(response))
             } catch (e) {
@@ -37,19 +36,19 @@ export function Catalog({ isPage, searchInput }) {
     const { catalogItems, loading, error, search } = useSelector(state => state.catalog);
     const dispatch = useDispatch();
 
+    const [searchField, setSearchField] = useState(isPage ? searchInput : '')
+
     const handleSearch = () => {
         dispatch(changeSearchField(categoryId, offset, searchField));
     };
 
-    useEffect(() => {handleSearch()}, [searchField])
+    useEffect(handleSearch, [searchField])
 
     const handleLoadCatalog = () => {
-        dispatch(loadCatalogRequest(categoryId, offset, searchField));
+        dispatch(loadCatalogRequest(categoryId, offset, search));
     };
 
-    useEffect(() => {
-        handleLoadCatalog()
-    }, [categoryId, offset])
+    useEffect(handleLoadCatalog, [categoryId, offset])
 
     return (
         <section className="catalog">
@@ -58,7 +57,7 @@ export function Catalog({ isPage, searchInput }) {
             {loading && <div className="preloader"/>}
 
             {isPage && <form className="catalog-search-form form-inline">
-                <input className="form-control" placeholder="Поиск" value={search}
+                <input className="form-control" placeholder="Поиск" value={searchField}
                        onChange={(e) => setSearchField(e.target.value)}/>
             </form>}
 

@@ -1,3 +1,4 @@
+import { useState }                 from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart }           from '../globalState/actions/actionCreators';
 import { Row }                      from '../layout/Row';
@@ -12,6 +13,29 @@ export function Cart() {
 
     const handleRemove = (itemId) => {
         dispatch(removeFromCart(itemId))
+    }
+
+    const [orderForm, setOrderForm] = useState({
+                                                   'owner': {
+                                                       'phone': '',
+                                                       'address': '',
+                                                   },
+                                                   'items': storeItems.map(item => {
+                                                       return {
+                                                           'id': item.id,
+                                                           'price': item.product.price,
+                                                           'count': item.count
+                                                       }
+                                                   })
+                                               })
+
+    const handleFormChange = (e) => {
+        e.preventDefault()
+        setOrderForm({ ...orderForm, owner: { ...orderForm.owner, [e.target.name]: e.target.value } })
+    }
+
+    const handleSubmit = () => {
+
     }
 
     return (
@@ -60,17 +84,20 @@ export function Cart() {
                 <section className="order">
                     <h2 className="text-center">Оформить заказ</h2>
                     <div className="card" style={{ maxWidth: '30rem', margin: '0 auto' }}>
-                        <form className="card-body">
+                        <form className="card-body" onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <label htmlFor="phone">Телефон</label>
-                                <input className="form-control" id="phone" placeholder="Ваш телефон"/>
+                                <input className="form-control" id="phone" name={'phone'} placeholder="Ваш телефон"
+                                       onChange={handleFormChange} value={orderForm.owner.phone} required/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="address">Адрес доставки</label>
-                                <input className="form-control" id="address" placeholder="Адрес доставки"/>
+                                <input className="form-control" id="address" name={'address'}
+                                       placeholder="Адрес доставки"
+                                       onChange={handleFormChange} value={orderForm.owner.address} required/>
                             </div>
                             <div className="form-group form-check">
-                                <input type="checkbox" className="form-check-input" id="agreement"/>
+                                <input type="checkbox" className="form-check-input" id="agreement" required/>
                                 <label className="form-check-label" htmlFor="agreement">Согласен с правилами
                                     доставки</label>
                             </div>

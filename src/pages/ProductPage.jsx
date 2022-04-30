@@ -34,7 +34,7 @@ export function ProductPage() {
         const loadProduct = async (productId) => {
             setLoading(true)
             try {
-                await fetch(`http://localhost:7070/api/items/${productId}`)
+                await fetch(`${process.env.REACT_APP_LOAD_CATALOG_URL}/${productId}`)
                     .then(response => response.json())
                     .then(response => setProduct(response))
             } catch (e) {
