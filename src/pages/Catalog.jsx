@@ -7,33 +7,18 @@ import { useDispatch, useSelector }              from 'react-redux';
 
 export function Catalog({ isPage, searchInput }) {
     const [categoryId, setCategoryId] = useState(0)
-    const [offset, setOffset] = useState(0)
-
-    const [showMoreButton, setShowMoreButton] = useState(true)
-    const [categories, setCategories] = useState([])
-
-    useEffect(() => {
-        const loadCategories = async () => {
-            try {
-                await fetch(`${process.env.REACT_APP_LOAD_CATEGORIES_URL}`)
-                    .then(response => response.json())
-                    .then(response => setCategories(response))
-            } catch (e) {
-
-            } finally {
-            }
-
-        }
-        loadCategories()
-
-    }, [])
 
     const handleSetCategoryId = (id) => {
         setCategoryId(id)
         setOffset(0)
     }
 
+    const [offset, setOffset] = useState(0)
+
+    const [showMoreButton, setShowMoreButton] = useState(true)
+
     const { catalogItems, loading, error, search } = useSelector(state => state.catalog);
+
     const dispatch = useDispatch();
 
     const [searchField, setSearchField] = useState(isPage ? searchInput : '')
@@ -44,11 +29,9 @@ export function Catalog({ isPage, searchInput }) {
 
     useEffect(handleSearch, [searchField])
 
-    const handleLoadCatalog = () => {
+    useEffect(() => {
         dispatch(loadCatalogRequest(categoryId, offset, search));
-    };
-
-    useEffect(handleLoadCatalog, [categoryId, offset])
+    }, [categoryId, offset])
 
     return (
         <section className="catalog">
@@ -61,8 +44,7 @@ export function Catalog({ isPage, searchInput }) {
                        onChange={(e) => setSearchField(e.target.value)}/>
             </form>}
 
-            {!loading && <Categories categories={categories}
-                                     categoryId={categoryId}
+            {!loading && <Categories categoryId={categoryId}
                                      setCategoryId={handleSetCategoryId}/>}
 
             {!loading && <Row>{catalogItems.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>}

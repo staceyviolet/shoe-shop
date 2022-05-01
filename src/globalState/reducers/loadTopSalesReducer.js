@@ -1,35 +1,33 @@
 import {
-    LOAD_CATEGORIES_REQUEST,
-    LOAD_CATEGORIES_FAILURE,
-    LOAD_CATEGORIES_SUCCESS,
+    LOAD_TOP_SALES_REQUEST, LOAD_TOP_SALES_FAILURE, LOAD_TOP_SALES_SUCCESS,
 } from '../actions/actionTypes'
 
 const initialState = {
-    categories: [],
+    topSales: [],
     loading: false,
     error: null,
 };
 
-export default function loadCategoriesReducer(state = initialState, action) {
+export default function loadTopSalesReducer(state = initialState, action) {
     switch (action.type) {
-        case LOAD_CATEGORIES_REQUEST:
+        case LOAD_TOP_SALES_REQUEST:
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-        case LOAD_CATEGORIES_FAILURE:
+        case LOAD_TOP_SALES_FAILURE:
             const { error } = action.payload;
             return {
                 ...state,
                 loading: false,
                 error,
             };
-        case LOAD_CATEGORIES_SUCCESS:
-            const { categories } = action.payload;
+        case LOAD_TOP_SALES_SUCCESS:
+            const { topSales } = action.payload;
             return {
                 ...state,
-                categories,
+                topSales,
                 loading: false,
                 error: null,
             };

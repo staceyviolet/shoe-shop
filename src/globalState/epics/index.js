@@ -1,11 +1,16 @@
 import { ofType }                                                     from 'redux-observable';
 import { ajax }                                                       from 'rxjs/ajax';
-import { map, retry, filter, debounceTime, switchMap, catchError }            from 'rxjs/operators';
-import { CHANGE_SEARCH_FIELD, LOAD_CATALOG_REQUEST } from '../actions/actionTypes';
+import { map, retry, filter, debounceTime, switchMap, catchError }           from 'rxjs/operators';
+import {
+    CHANGE_SEARCH_FIELD,
+    LOAD_CATALOG_REQUEST,
+    LOAD_CATEGORIES_REQUEST,
+    LOAD_TOP_SALES_REQUEST
+} from '../actions/actionTypes';
 import {
     loadCatalogRequest,
     loadCatalogSuccess,
-    loadCatalogFailure,
+    loadCatalogFailure, loadTopSalesSuccess, loadTopSalesFailure, loadCategoriesSuccess, loadCategoriesFailure,
 } from '../actions/actionCreators';
 import { of }                                                         from 'rxjs';
 
@@ -26,5 +31,21 @@ export const loadCatalogEpic = action$ => action$.pipe(
         retry(3),
         map(o => loadCatalogSuccess(o)),
         catchError(e => of(loadCatalogFailure(e))),
+    )),
+);
+
+export const loadCategoriesEpic = action$ => action$.pipe(
+    ofType(LOAD_CATEGORIES_REQUEST),
+    switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATEGORIES_URL}`).pipe(
+        map(o => loadCategoriesSuccess(o)),
+        catchError(e => of(loadCategoriesFailure(e))),
+    )),
+);
+
+export const loadTopSalesEpic = action$ => action$.pipe(
+    ofType(LOAD_TOP_SALES_REQUEST),
+    switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_TOP_SALES_URL}`).pipe(
+        map(o => loadTopSalesSuccess(o)),
+        catchError(e => of(loadTopSalesFailure(e))),
     )),
 );

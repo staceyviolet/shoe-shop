@@ -7,11 +7,10 @@ import {
     REMOVE_FROM_CART,
     LOAD_CATEGORIES_FAILURE,
     LOAD_CATEGORIES_SUCCESS,
-    LOAD_CATEGORIES_REQUEST,
+    LOAD_CATEGORIES_REQUEST, LOAD_TOP_SALES_REQUEST, LOAD_TOP_SALES_FAILURE, LOAD_TOP_SALES_SUCCESS,
 } from './actionTypes';
 export const loadCategoriesRequest = () => ({
     type: LOAD_CATEGORIES_REQUEST,
-    payload: {},
 });
 
 export const loadCategoriesFailure = error => ({
@@ -22,6 +21,20 @@ export const loadCategoriesFailure = error => ({
 export const loadCategoriesSuccess = categories => ({
     type: LOAD_CATEGORIES_SUCCESS,
     payload: {categories},
+});
+
+export const loadTopSalesRequest = () => ({
+    type: LOAD_TOP_SALES_REQUEST,
+});
+
+export const loadTopSalesFailure = error => ({
+    type: LOAD_TOP_SALES_FAILURE,
+    payload: {error},
+});
+
+export const loadTopSalesSuccess = topSales => ({
+    type: LOAD_TOP_SALES_SUCCESS,
+    payload: {topSales},
 });
 
 export const loadCatalogRequest = (category, offset, search) => ({
