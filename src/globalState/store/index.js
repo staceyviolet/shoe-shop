@@ -1,8 +1,10 @@
 import { createStore, combineReducers, applyMiddleware, compose, } from 'redux';
 import { combineEpics, createEpicMiddleware }                      from 'redux-observable';
 import cartReducer                                                 from '../reducers/cartReducer';
-import loadCatalogReducer
-                                                                   from '../reducers/loadCatalogReducer';
+import loadCatalogReducer                                          from '../reducers/loadCatalogReducer';
+import loadCategoriesReducer                                       from '../reducers/loadCategoriesReducer';
+import loadProductReducer                                          from '../reducers/loadProductReducer';
+import loadTopSalesReducer                                         from '../reducers/loadTopSalesReducer';
 import {
     changeSearchEpic,
     loadCatalogEpic,
@@ -10,13 +12,7 @@ import {
     loadProductEpic,
     loadTopSalesEpic,
     placeOrderEpic
-} from '../epics';
-import loadCategoriesReducer
-                                                                   from '../reducers/loadCategoriesReducer';
-import loadProductReducer
-                                                                   from '../reducers/loadProductReducer';
-import loadTopSalesReducer
-                                                                   from '../reducers/loadTopSalesReducer';
+}                                                                  from '../epics';
 
 const reducer = combineReducers({
                                     topSales: loadTopSalesReducer,

@@ -18,7 +18,8 @@ import {
     LOAD_PRODUCT_FAILURE,
     LOAD_PRODUCT_SUCCESS,
     CHANGE_SELECTED_CATEGORY,
-    CHANGE_OFFSET, CHANGE_OWNER_DETAILS,
+    CHANGE_OFFSET,
+    CHANGE_OWNER_DETAILS,
 } from './actionTypes';
 
 export const loadCategoriesRequest = () => ({
