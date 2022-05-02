@@ -1,7 +1,7 @@
 import { useEffect }                from 'react';
-import { ProductCard }              from '../components/ProductCard';
-import { Categories }               from '../components/Categories';
-import { Row }                      from '../layout/Row';
+import { ProductCard } from '../components/ProductCard';
+import { Categories }  from '../components/categories/Categories';
+import { Row }         from '../layout/Row';
 import {
     changeOffset,
     changeSearchField,

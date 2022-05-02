@@ -1,8 +1,8 @@
 import { Row }     from './Row';
 import { Col }     from './Col';
-import { TopMenu } from '../components/TopMenu';
+import { TopMenu } from '../components/header/TopMenu';
 
-export function Header(props) {
+export function Header() {
     return (
         <header className="container">
             <Row>

@@ -1,8 +1,8 @@
 import { useDispatch, useSelector }      from 'react-redux';
 import { addToCart, loadProductRequest } from '../globalState/actions/actionCreators';
-import { Col }                           from '../layout/Col';
-import { Banner }                        from '../components/Banner';
-import { Row }                           from '../layout/Row';
+import { Col }    from '../layout/Col';
+import { Banner } from '../components/homePage/Banner';
+import { Row }    from '../layout/Row';
 import { useEffect, useState }           from 'react';
 import { useParams }                     from 'react-router';
 

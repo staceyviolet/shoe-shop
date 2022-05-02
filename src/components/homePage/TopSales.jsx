@@ -1,7 +1,7 @@
 import { useEffect }                from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadTopSalesRequest }      from '../globalState/actions/actionCreators';
-import { ProductCard }              from './ProductCard';
+import { loadTopSalesRequest }      from '../../globalState/actions/actionCreators';
+import { ProductCard }              from '../ProductCard';
 
 export function TopSales() {
     const { topSales, loading, error } = useSelector(state => state.topSales);
