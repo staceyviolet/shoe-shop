@@ -1,8 +1,8 @@
-import {Row} from "../layout/Row";
-import {Col} from "../layout/Col";
-import {Banner} from "../components/Banner";
-import {TopSales} from "../components/TopSales";
-import {Catalog} from "./Catalog";
+import { Row }      from '../layout/Row';
+import { Col }      from '../layout/Col';
+import { Banner }   from '../components/Banner';
+import { TopSales } from '../components/TopSales';
+import { Catalog }  from './Catalog';
 
 export function HomePage() {
     return (

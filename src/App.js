@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Provider } from 'react-redux';
 import { Route }    from 'react-router-dom';
 import { Routes }   from 'react-router';
@@ -18,16 +17,15 @@ import { ProductPage } from './pages/ProductPage';
 import './style.css';
 
 function App() {
-    const [searchInput, setSearchInput] = useState('')
     return (
         <Provider store={store}>
-            <Header searchInput={searchInput} setSearchInput={setSearchInput}/>
+            <Header/>
             <Body>
                 <Routes>
                     <Route path={'/'} element={<HomePage/>}/>
                     <Route path={'/about'} element={<About/>}/>
                     <Route path={'/cart'} element={<Cart/>}/>
-                    <Route path={'/catalog'} element={<Catalog isPage searchInput={searchInput}/>}/>
+                    <Route path={'/catalog'} element={<Catalog isPage />}/>
                     <Route path={'/contacts'} element={<Contacts/>}/>
                     <Route path={'/products/:productId'} element={<ProductPage/>}/>
                     <Route path={'*'} element={<NotFound/>}/>

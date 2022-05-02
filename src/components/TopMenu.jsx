@@ -1,19 +1,28 @@
-import { useSelector }   from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
-import { useNavigate }   from 'react-router';
-import { useState }      from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, NavLink }            from 'react-router-dom';
+import { useNavigate }       from 'react-router';
+import { useState }          from 'react';
+import { changeSearchField } from '../globalState/actions/actionCreators';
 
-export function TopMenu({ searchInput, setSearchInput }) {
+export function TopMenu(props) {
+    const { search } = useSelector(state => state.catalog);
+
     const navigate = useNavigate()
 
     const handleCartClick = () => {
         navigate('/cart')
     }
+    const dispatch = useDispatch()
+
+    const handleChangeSearchField = (e) => {
+        e.preventDefault()
+        dispatch(changeSearchField(e.target.value))
+    }
 
     const [showSearch, setShowSearch] = useState(false)
 
     const handleSearchClick = () => {
-        if (searchInput) {
+        if (!!search.length) {
             navigate('/catalog')
 
         } else {
@@ -55,8 +64,8 @@ export function TopMenu({ searchInput, setSearchInput }) {
                     </div>
                     <form data-id="search-form"
                           className={`header-controls-search-form form-inline ${!showSearch ? 'invisible' : ''}`}>
-                        <input className="form-control" placeholder="Поиск" value={searchInput}
-                               onChange={(e) => setSearchInput(e.target.value)}/>
+                        <input className="form-control" placeholder="Поиск" value={search}
+                               onChange={handleChangeSearchField}/>
                     </form>
                 </div>
             </div>

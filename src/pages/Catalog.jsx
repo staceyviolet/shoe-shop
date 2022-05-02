@@ -1,61 +1,76 @@
-import { useEffect, useState }                   from 'react';
-import { ProductCard }                           from '../components/ProductCard';
-import { Categories }                            from '../components/Categories';
-import { Row }                                   from '../layout/Row';
-import { changeSearchField, loadCatalogRequest } from '../globalState/actions/actionCreators';
-import { useDispatch, useSelector }              from 'react-redux';
+import { useEffect }                from 'react';
+import { ProductCard }              from '../components/ProductCard';
+import { Categories }               from '../components/Categories';
+import { Row }                      from '../layout/Row';
+import {
+    changeOffset,
+    changeSearchField,
+    changeSelectedCategory,
+    loadCatalogRequest
+}                                   from '../globalState/actions/actionCreators';
+import { useDispatch, useSelector } from 'react-redux';
 
-export function Catalog({ isPage, searchInput }) {
-    const [categoryId, setCategoryId] = useState(0)
-
-    const handleSetCategoryId = (id) => {
-        setCategoryId(id)
-        setOffset(0)
-    }
-
-    const [offset, setOffset] = useState(0)
-
-    const [showMoreButton, setShowMoreButton] = useState(true)
-
-    const { catalogItems, loading, error, search } = useSelector(state => state.catalog);
+export function Catalog({ isPage }) {
+    const { catalogItems, loading, error, search, offset, category } = useSelector(state => state.catalog);
 
     const dispatch = useDispatch();
 
-    const [searchField, setSearchField] = useState(isPage ? searchInput : '')
+    const handleChangeSearchField = (e) => {
+        e.preventDefault()
+        dispatch(changeSearchField(e.target.value))
+        dispatch(loadCatalogRequest())
+    }
 
-    const handleSearch = () => {
-        dispatch(changeSearchField(categoryId, offset, searchField));
+    const handleShowMoreClick = (e) => {
+        e.preventDefault()
+        dispatch(changeOffset(offset + 6));
     };
 
-    useEffect(handleSearch, [searchField])
+    useEffect(() => {
+        dispatch(changeOffset(0));
+        dispatch(changeSelectedCategory(0));
+    }, [])
 
     useEffect(() => {
-        dispatch(loadCatalogRequest(categoryId, offset, search));
-    }, [categoryId, offset])
+        dispatch(loadCatalogRequest());
+    }, [category, offset, dispatch])
+
+    const showMoreButton = !!catalogItems.length && catalogItems.length > 5
 
     return (
         <section className="catalog">
             <h2 className="text-center">Каталог</h2>
 
-            {loading && <div className="preloader"/>}
+            {isPage &&
+                <form className="catalog-search-form form-inline">
+                    <input className="form-control" placeholder="Поиск" value={search}
+                           onChange={handleChangeSearchField}/>
+                </form>
+            }
 
-            {isPage && <form className="catalog-search-form form-inline">
-                <input className="form-control" placeholder="Поиск" value={searchField}
-                       onChange={(e) => setSearchField(e.target.value)}/>
-            </form>}
+            {!error ? (loading ?
+                       <div className="preloader">
+                           <span></span>
+                           <span></span>
+                           <span></span>
+                           <span></span>
+                       </div>
+                               :
+                       <>
+                           <Categories/>
 
-            {!loading && <Categories categoryId={categoryId}
-                                     setCategoryId={handleSetCategoryId}/>}
+                           <Row>{catalogItems.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>
 
-            {!loading && <Row>{catalogItems.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>}
-
-            {!loading && showMoreButton && <div className="text-center">
-                <button className="btn btn-outline-primary"
-                        onClick={() => setOffset(prevState => prevState + 6)}
-                >
-                    Загрузить ещё
-                </button>
-            </div>}
+                           {showMoreButton &&
+                               <div className="text-center">
+                                   <button className="btn btn-outline-primary"
+                                           onClick={handleShowMoreClick}>
+                                       Загрузить ещё
+                                   </button>
+                               </div>
+                           }
+                       </>
+            ) : <p>Упс! Что-то пошло не так</p>}
         </section>
     )
 }

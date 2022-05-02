@@ -1,24 +1,30 @@
 import { useEffect }                from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link }                     from 'react-router-dom';
-import { loadCategoriesRequest }    from '../globalState/actions/actionCreators';
+import { Link }                                                        from 'react-router-dom';
+import { changeOffset, changeSelectedCategory, loadCategoriesRequest } from '../globalState/actions/actionCreators';
 
-export function Categories({ categoryId, setCategoryId }) {
+export function Categories(props) {
     const { categories, loading, error } = useSelector(state => state.categories);
+    const { category } = useSelector(state => state.catalog);
 
     const dispatch = useDispatch()
 
+    const handleChangeCategory = (id) => {
+        dispatch(changeSelectedCategory(id))
+        dispatch(changeOffset(0))
+    }
+
     useEffect(() => {
         dispatch(loadCategoriesRequest());
-    }, [])
+    }, [dispatch])
 
     return (
         <ul className="catalog-categories nav justify-content-center">
             <li className="nav-item">
-                <Link className={categoryId !== 0 ? 'nav-link' : 'nav-link active'}
+                <Link className={category !== 0 ? 'nav-link' : 'nav-link active'}
                       to={`#`}
                       onClick={() => {
-                          setCategoryId(0)
+                          handleChangeCategory(0)
                       }}>
                     Все
                 </Link>
@@ -27,10 +33,10 @@ export function Categories({ categoryId, setCategoryId }) {
             {categories.map(category => {
                 return (
                     <li key={category.id} className={'nav-item'}>
-                        <Link className={categoryId !== category.id ? 'nav-link' : 'nav-link active'}
+                        <Link className={category !== category.id ? 'nav-link' : 'nav-link active'}
                               to={`#`}
                               onClick={() => {
-                                  setCategoryId(category.id)
+                                  handleChangeCategory(category.id)
                               }} strict>
                             {category.title}
                         </Link>

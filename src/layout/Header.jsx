@@ -1,13 +1,13 @@
-import {Row} from "./Row";
-import {Col} from "./Col";
-import {TopMenu} from "../components/TopMenu";
+import { Row }     from './Row';
+import { Col }     from './Col';
+import { TopMenu } from '../components/TopMenu';
 
-export function Header({searchInput, setSearchInput}) {
+export function Header(props) {
     return (
         <header className="container">
             <Row>
                 <Col>
-                    <TopMenu searchInput={searchInput} setSearchInput={setSearchInput}/>
+                    <TopMenu/>
                 </Col>
             </Row>
         </header>

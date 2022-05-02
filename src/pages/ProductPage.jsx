@@ -1,52 +1,20 @@
-import { useDispatch }         from 'react-redux';
-import { addToCart }           from '../globalState/actions/actionCreators';
-import { Col }                 from '../layout/Col';
-import { Banner }              from '../components/Banner';
-import { Row }                 from '../layout/Row';
-import { useEffect, useState } from 'react';
-import { useParams }           from 'react-router';
+import { useDispatch, useSelector }      from 'react-redux';
+import { addToCart, loadProductRequest } from '../globalState/actions/actionCreators';
+import { Col }                           from '../layout/Col';
+import { Banner }                        from '../components/Banner';
+import { Row }                           from '../layout/Row';
+import { useEffect, useState }           from 'react';
+import { useParams }                     from 'react-router';
 
 export function ProductPage() {
     const { productId } = useParams()
-    const [product, setProduct] = useState({
-                                               'id': 0,
-                                               'category': 0,
-                                               'title': '',
-                                               'images': [],
-                                               'sku': '',
-                                               'manufacturer': '',
-                                               'color': '',
-                                               'material': '',
-                                               'reason': '',
-                                               'season': '',
-                                               'heelSize': '',
-                                               'price': 0,
-                                               'sizes': [
-                                                   {
-                                                       'avalible': false,
-                                                       'size': ''
-                                                   }
-                                               ]
-                                           })
-    const [loading, setLoading] = useState(false)
+    const { product, loading, error } = useSelector(state => state.product);
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        const loadProduct = async (productId) => {
-            setLoading(true)
-            try {
-                await fetch(`${process.env.REACT_APP_LOAD_CATALOG_URL}/${productId}`)
-                    .then(response => response.json())
-                    .then(response => setProduct(response))
-            } catch (e) {
-
-            } finally {
-                setLoading(false)
-            }
-
-        }
-        loadProduct(productId)
-
-    }, [])
+        dispatch(loadProductRequest(productId));
+    }, [dispatch])
 
     const [sizeSelected, setSizeSelected] = useState('')
     const [counter, setCounter] = useState(1)
@@ -57,15 +25,9 @@ export function ProductPage() {
         setCounter(prevState => prevState !== 0 ? prevState - 1 : prevState)
     }
 
-    const dispatch = useDispatch()
-
     const handleAdd = (productId, product, counter, sizeSelected) => {
         dispatch(addToCart({
-                               'id': productId,
-                               'product': product,
-                               'count': counter,
-                               size: sizeSelected
-
+                               'id': productId, 'product': product, 'count': counter, size: sizeSelected
                            }))
     }
 
@@ -114,19 +76,19 @@ export function ProductPage() {
                                 <p>Размеры в наличии: {product.sizes
                                                               .filter(size => size.avalible === true)
                                                               .map(size => {
-                                                                  return <span
+                                                                  return (<span
                                                                       className={`catalog-item-size ${sizeSelected === size.size && 'selected'}`}
-                                                                      onClick={() => setSizeSelected(size.size)}>{size.size}</span>
+                                                                      onClick={() => setSizeSelected(size.size)}>{size.size}</span>)
                                                               })} </p>
 
-                                {!product.sizes.filter(size => size.avalible === true).length ? null :
+                                {!product.sizes
+                                         .filter(size => size.avalible === true).length ? null :
                                  <p>Количество: <span className="btn-group btn-group-sm pl-2">
                                         <button className="btn btn-secondary" onClick={decrement}>-</button>
                                         <span className="btn btn-outline-primary">{counter}</span>
                                         <button className="btn btn-secondary" onClick={increment}>+</button>
                                     </span>
                                  </p>}
-
                             </div>
 
                             {!product.sizes.filter(size => size.avalible === true).length ? null :
