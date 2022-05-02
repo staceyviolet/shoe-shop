@@ -1,9 +1,16 @@
 import {
-    ADD_TO_CART, CHANGE_OWNER_DETAILS, PLACE_ORDER_FAILURE, PLACE_ORDER_REQUEST, PLACE_ORDER_SUCCESS, REMOVE_FROM_CART,
+    ADD_TO_CART,
+    CHANGE_OWNER_DETAILS,
+    PLACE_ORDER_FAILURE,
+    PLACE_ORDER_REQUEST,
+    PLACE_ORDER_SUCCESS,
+    REMOVE_FROM_CART,
 } from '../actions/actionTypes'
 
+const cart = JSON.parse(window.localStorage.getItem('cart'))
+
 const initialState = {
-    cartItems: [],
+    cartItems: cart ? cart : [],
     owner: { phone: '', address: '' },
     loading: false,
     error: null,
@@ -13,11 +20,26 @@ export default function cartReducer(state = initialState, action) {
     switch (action.type) {
         case ADD_TO_CART:
             const { cartItem } = action.payload;
-            return { ...state, cartItems: [...state.cartItems, cartItem] }
+            const cartItemAlreadyExists = !!state.cartItems.filter(item => item.id === cartItem.id).length
+
+            const newCartItems = cartItemAlreadyExists ?
+                                 state.cartItems.map(item => {
+                                     if (item.id === cartItem.id) {
+                                         return { ...item, count: item.count + cartItem.count }
+                                     } else {return item}
+                                 })
+                                                       : [...state.cartItems, cartItem]
+
+            window.localStorage.setItem('cart', JSON.stringify(newCartItems));
+
+            return { ...state, cartItems: newCartItems }
         case REMOVE_FROM_CART:
             const { itemId } = action.payload;
-            const newCartItems = state.cartItems.filter(item => item.id !== itemId)
-            return { ...state, cartItems: newCartItems };
+            const cartItemsAfterRemove = state.cartItems.filter(item => item.id !== itemId)
+
+            window.localStorage.setItem('cart', JSON.stringify(cartItemsAfterRemove));
+
+            return { ...state, cartItems: cartItemsAfterRemove };
         case CHANGE_OWNER_DETAILS:
             const { name, value } = action.payload;
             return { ...state, owner: { ...state.owner, [name]: value } };
@@ -35,8 +57,9 @@ export default function cartReducer(state = initialState, action) {
                 error,
             };
         case PLACE_ORDER_SUCCESS:
+            window.localStorage.removeItem('cart')
             return {
-                ...initialState
+                ...initialState, cartItems: []
             };
         default:
             return state;

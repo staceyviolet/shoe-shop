@@ -8,7 +8,8 @@ export function OrderForm({ owner, onChange, onSubmit }) {
                        placeholder="Ваш телефон"
                        onChange={onChange}
                        value={owner.phone}
-                       required/>
+                       required
+                />
             </div>
 
             <div className="form-group">
@@ -19,15 +20,16 @@ export function OrderForm({ owner, onChange, onSubmit }) {
                        placeholder="Адрес доставки"
                        onChange={onChange}
                        value={owner.address}
-                       required/>
+                       required
+                />
             </div>
 
             <div className="form-group form-check">
                 <input type="checkbox"
                        className="form-check-input"
-                       id="agreement" required/>
-                <label className="form-check-label"
-                       htmlFor="agreement">
+                       id="agreement"
+                       required/>
+                <label className="form-check-label" htmlFor="agreement">
                     Согласен с правилами доставки
                 </label>
             </div>

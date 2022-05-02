@@ -1,6 +1,6 @@
 export function Body({children}) {
     return (
-        <body className="container">{children}</body>
+        <div className="container">{children}</div>
     )
 }
 

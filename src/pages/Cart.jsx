@@ -1,10 +1,14 @@
-import { useDispatch, useSelector }                              from 'react-redux';
-import { changeOwnerDetails, placeOrderRequest, removeFromCart } from '../globalState/actions/actionCreators';
-import { Row }                                                   from '../layout/Row';
-import { Col }                                                   from '../layout/Col';
-import { Banner }                                                from '../components/homePage/Banner';
-import { CartTable }                                             from './CartTable';
-import { OrderForm }                                             from './OrderForm';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    changeOwnerDetails,
+    placeOrderRequest,
+    removeFromCart
+}                                   from '../globalState/actions/actionCreators';
+import { Row }                      from '../layout/Row';
+import { Col }                      from '../layout/Col';
+import { Banner }                   from '../components/Banner';
+import { CartTable }                from './CartTable';
+import { OrderForm }                from './OrderForm';
 
 export function Cart() {
     const { cartItems, owner, loading, error } = useSelector((store) => store.cart)
@@ -20,7 +24,8 @@ export function Cart() {
         dispatch(changeOwnerDetails(e.target.name, e.target.value))
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault()
         dispatch(placeOrderRequest())
     }
 
@@ -37,9 +42,21 @@ export function Cart() {
                 <section className="order">
                     <h2 className="text-center">Оформить заказ</h2>
 
-                    <div className="card" style={{ maxWidth: '30rem', margin: '0 auto' }}>
-                        <OrderForm onChange={handleFormChange} onSubmit={handleSubmit} owner={owner}/>
-                    </div>
+                    {loading ? (
+                                 <div className="preloader">
+                                     <span></span>
+                                     <span></span>
+                                     <span></span>
+                                     <span></span>
+                                 </div>
+                             )
+                             :
+                     <div className="card" style={{ maxWidth: '30rem', margin: '0 auto' }}>
+                         <OrderForm onChange={handleFormChange} onSubmit={handleSubmit} owner={owner}/>
+                     </div>
+                    }
+
+                    {error && <p>Ошибка оформления заказа</p>}
                 </section>
             </Col>
         </Row>

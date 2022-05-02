@@ -66,7 +66,13 @@ export const placeOrderEpic = (action$, state$) => action$.pipe(
         `${process.env.REACT_APP_PLACE_ORDER_URL}`,
         {
             owner: state$.value.cart.owner,
-            items: state$.value.cart.items,
+            items: state$.value.cart.cartItems.map(item => {
+                return {
+                    id: +item.id,
+                    price: item.product.price,
+                    count: item.count
+                }
+            }),
         },
         { 'Content-type': 'application/json; charset=UTF-8' }).pipe(
         map(o => placeOrderSuccess(o)),

@@ -1,6 +1,10 @@
-export function CartTable({cartItems, onRemove}) {
+import { Link }      from 'react-router-dom';
+
+export function CartTable({ cartItems, onRemove }) {
     const totalOrderSum = !!cartItems.length ? cartItems.map(item => item.product.price * item.count).reduce((x, y) => x + y)
                                              : 0
+    let counter = 1;
+
     return (
         <table className="table table-bordered">
             <thead>
@@ -17,9 +21,9 @@ export function CartTable({cartItems, onRemove}) {
             <tbody>
             {!!cartItems.length && cartItems.map(item => {
                 return (
-                    <tr>
-                        <td scope="row">1</td>
-                        <td><a href="/products/1.html">{item.product.title}</a></td>
+                    <tr key={item.id}>
+                        <td>{counter++}</td>
+                        <td><Link to={'/products/' + item.id}>{item.product.title}</Link></td>
                         <td>{item.size}</td>
                         <td>{item.count}</td>
                         <td>{item.product.price}</td>

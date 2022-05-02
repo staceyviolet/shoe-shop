@@ -1,6 +1,6 @@
 import { Row }      from '../layout/Row';
 import { Col }      from '../layout/Col';
-import { Banner }   from '../components/homePage/Banner';
+import { Banner }   from '../components/Banner';
 import { TopSales } from '../components/homePage/TopSales';
 import { Catalog }  from './Catalog';
 

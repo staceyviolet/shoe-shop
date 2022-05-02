@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate }              from 'react-router';
-import { useState }          from 'react';
-import { changeSearchField } from '../../globalState/actions/actionCreators';
-import { HeaderControls }    from './HeaderControls';
-import { HeaderSearchForm }  from './HeaderSearchForm';
-import { Logo }        from './Logo';
-import { TopMenuItem } from './TopMenuItem';
+import { useState }                 from 'react';
+import { changeSearchField }        from '../../globalState/actions/actionCreators';
+import { HeaderControls }           from './HeaderControls';
+import { HeaderSearchForm }         from './HeaderSearchForm';
+import { Logo }                     from './Logo';
+import { TopMenuItem }              from './TopMenuItem';
 
 const topMenuItems = [
     { title: 'Главная', path: '/' },
@@ -39,7 +39,8 @@ export function TopMenu() {
         }
     }
 
-    const itemsInCart = useSelector((store) => store.cart.cartItems).length
+    const itemsInCart = useSelector((store) => store.cart.cartItems)
+    const itemsInCartCount = !!itemsInCart.length ? itemsInCart.map(item => item.count).reduce((a, b) => a + b) : 0
 
     return (
         <nav className="navbar navbar-expand-sm navbar-light bg-light">
@@ -55,7 +56,7 @@ export function TopMenu() {
                 <div>
                     <HeaderControls onSearchClick={handleSearchClick}
                                     onCartClick={handleCartClick}
-                                    itemsInCart={itemsInCart}/>
+                                    itemsInCart={itemsInCartCount !== 0 && itemsInCartCount}/>
 
                     <HeaderSearchForm showSearch={showSearch}
                                       onChange={handleChangeSearchField}
