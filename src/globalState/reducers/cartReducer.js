@@ -14,6 +14,7 @@ const initialState = {
     owner: { phone: '', address: '' },
     loading: false,
     error: null,
+    success: false
 };
 
 export default function cartReducer(state = initialState, action) {
@@ -59,7 +60,7 @@ export default function cartReducer(state = initialState, action) {
         case PLACE_ORDER_SUCCESS:
             window.localStorage.removeItem('cart')
             return {
-                ...initialState, cartItems: []
+                ...initialState, cartItems: [], success: true
             };
         default:
             return state;

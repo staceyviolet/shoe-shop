@@ -11,7 +11,7 @@ import { CartTable }                from './CartTable';
 import { OrderForm }                from './OrderForm';
 
 export function Cart() {
-    const { cartItems, owner, loading, error } = useSelector((store) => store.cart)
+    const { cartItems, owner, loading, error, success } = useSelector((store) => store.cart)
 
     const dispatch = useDispatch()
 
@@ -57,6 +57,7 @@ export function Cart() {
                     }
 
                     {error && <p>Ошибка оформления заказа</p>}
+                    {success && <p>Заказ успешно оформлен</p>}
                 </section>
             </Col>
         </Row>

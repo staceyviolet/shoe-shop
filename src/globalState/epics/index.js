@@ -1,13 +1,14 @@
 import { ofType }                     from 'redux-observable';
-import { ajax }                       from 'rxjs/ajax';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { ajax }                                             from 'rxjs/ajax';
+import { map, switchMap, catchError, debounceTime, filter } from 'rxjs/operators';
 import {
+    CHANGE_SEARCH_FIELD,
     LOAD_CATALOG_REQUEST,
     LOAD_CATEGORIES_REQUEST,
     LOAD_PRODUCT_REQUEST,
     LOAD_TOP_SALES_REQUEST,
     PLACE_ORDER_REQUEST
-}                                     from '../actions/actionTypes';
+} from '../actions/actionTypes';
 import {
     loadCatalogSuccess,
     loadCatalogFailure,
@@ -18,8 +19,8 @@ import {
     loadProductSuccess,
     loadProductFailure,
     placeOrderSuccess,
-    placeOrderFailure,
-}                                     from '../actions/actionCreators';
+    placeOrderFailure, loadCatalogRequest,
+} from '../actions/actionCreators';
 import { of }                         from 'rxjs';
 
 export const loadTopSalesEpic = action$ => action$.pipe(
@@ -38,6 +39,14 @@ export const loadCategoriesEpic = action$ => action$.pipe(
     )),
 );
 
+export const changeSearchEpic = action$ => action$.pipe(
+    ofType(CHANGE_SEARCH_FIELD),
+    map(o => o.payload.search.trim()),
+    filter(o => o !== ''),
+    debounceTime(1000),
+    map(o => loadCatalogRequest(o))
+)
+
 export const loadCatalogEpic = (action$, state$) => action$.pipe(
     ofType(LOAD_CATALOG_REQUEST),
     map(o => new URLSearchParams({
@@ -46,6 +55,7 @@ export const loadCatalogEpic = (action$, state$) => action$.pipe(
                                      q: state$.value.catalog.search,
                                  })),
     switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATALOG_URL}?${o}`).pipe(
+        debounceTime(1000),
         map(o => loadCatalogSuccess(o)),
         catchError(e => of(loadCatalogFailure(e))),
     )),

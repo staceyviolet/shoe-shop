@@ -28,6 +28,7 @@ function App() {
                     <Route path={'/catalog'} element={<Catalog isPage />}/>
                     <Route path={'/contacts'} element={<Contacts/>}/>
                     <Route path={'/products/:productId'} element={<ProductPage/>}/>
+                    <Route path={'/cart'} element={<Cart/>}/>
                     <Route path={'*'} element={<NotFound/>}/>
                 </Routes>
             </Body>

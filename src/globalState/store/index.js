@@ -4,12 +4,13 @@ import cartReducer                                                 from '../redu
 import loadCatalogReducer
                                                                    from '../reducers/loadCatalogReducer';
 import {
+    changeSearchEpic,
     loadCatalogEpic,
     loadCategoriesEpic,
     loadProductEpic,
     loadTopSalesEpic,
     placeOrderEpic
-}                                                                  from '../epics';
+} from '../epics';
 import loadCategoriesReducer
                                                                    from '../reducers/loadCategoriesReducer';
 import loadProductReducer
@@ -28,11 +29,12 @@ const reducer = combineReducers({
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const epic = combineEpics(
+    changeSearchEpic,
     loadCatalogEpic,
     loadCategoriesEpic,
     loadTopSalesEpic,
     loadProductEpic,
-    placeOrderEpic
+    placeOrderEpic,
 );
 
 const epicMiddleware = createEpicMiddleware();
