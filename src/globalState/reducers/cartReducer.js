@@ -25,7 +25,7 @@ export default function cartReducer(state = initialState, action) {
 
             const newCartItems = cartItemAlreadyExists ?
                                  state.cartItems.map(item => {
-                                     if (item.id === cartItem.id) {
+                                     if (item.id === cartItem.id && item.size === cartItem.size) {
                                          return { ...item, count: item.count + cartItem.count }
                                      } else {return item}
                                  })
