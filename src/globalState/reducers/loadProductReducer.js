@@ -5,7 +5,26 @@ import {
 } from '../actions/actionTypes'
 
 const initialState = {
-    id: null,
+    product: {
+        id: 0,
+        category: 0,
+        title: '',
+        images: [],
+        sku: '',
+        manufacturer: '',
+        color: '',
+        material: '',
+        reason: '',
+        season: '',
+        heelSize: '',
+        price: 0,
+        sizes: [
+            {
+                'avalible': false,
+                'size': ''
+            }
+        ]
+    },
     loading: false,
     error: null,
 };
@@ -26,10 +45,10 @@ export default function loadProductReducer(state = initialState, action) {
                 error,
             };
         case LOAD_PRODUCT_SUCCESS:
-            const { id } = action.payload;
+            const { product } = action.payload;
             return {
                 ...state,
-                id,
+                product,
                 loading: false,
                 error: null,
             };

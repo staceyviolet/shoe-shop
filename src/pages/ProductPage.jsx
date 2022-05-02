@@ -8,6 +8,7 @@ import { useParams }                     from 'react-router';
 
 export function ProductPage() {
     const { productId } = useParams()
+
     const { product, loading, error } = useSelector(state => state.product);
 
     const dispatch = useDispatch()
@@ -76,9 +77,10 @@ export function ProductPage() {
                                 <p>Размеры в наличии: {product.sizes
                                                               .filter(size => size.avalible === true)
                                                               .map(size => {
-                                                                  return (<span
-                                                                      className={`catalog-item-size ${sizeSelected === size.size && 'selected'}`}
-                                                                      onClick={() => setSizeSelected(size.size)}>{size.size}</span>)
+                                                                  return (
+                                                                      <span
+                                                                          className={`catalog-item-size ${sizeSelected === size.size && 'selected'}`}
+                                                                          onClick={() => setSizeSelected(size.size)}>{size.size}</span>)
                                                               })} </p>
 
                                 {!product.sizes

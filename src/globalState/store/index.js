@@ -16,14 +16,12 @@ import loadProductReducer
                                                                    from '../reducers/loadProductReducer';
 import loadTopSalesReducer
                                                                    from '../reducers/loadTopSalesReducer';
-import placeOrderReducer                                           from '../reducers/placeOrderReducer';
 
 const reducer = combineReducers({
                                     topSales: loadTopSalesReducer,
                                     categories: loadCategoriesReducer,
                                     catalog: loadCatalogReducer,
                                     cart: cartReducer,
-                                    order: placeOrderReducer,
                                     product: loadProductReducer
                                 });
 

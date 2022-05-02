@@ -18,7 +18,7 @@ import {
     LOAD_PRODUCT_FAILURE,
     LOAD_PRODUCT_SUCCESS,
     CHANGE_SELECTED_CATEGORY,
-    CHANGE_OFFSET,
+    CHANGE_OFFSET, CHANGE_OWNER_DETAILS,
 } from './actionTypes';
 
 export const loadCategoriesRequest = () => ({
@@ -114,4 +114,9 @@ export const loadProductFailure = error => ({
 export const loadProductSuccess = (product) => ({
     type: LOAD_PRODUCT_SUCCESS,
     payload: { product },
+});
+
+export const changeOwnerDetails = (name, value) => ({
+    type: CHANGE_OWNER_DETAILS,
+    payload: { name, value },
 });

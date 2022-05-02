@@ -29,7 +29,7 @@ export function Catalog({ isPage }) {
     useEffect(() => {
         dispatch(changeOffset(0));
         dispatch(changeSelectedCategory(0));
-    }, [])
+    }, [dispatch])
 
     useEffect(() => {
         dispatch(loadCatalogRequest());

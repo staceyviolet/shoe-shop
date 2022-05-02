@@ -53,8 +53,8 @@ export const loadCatalogEpic = (action$, state$) => action$.pipe(
 
 export const loadProductEpic = action$ => action$.pipe(
     ofType(LOAD_PRODUCT_REQUEST),
-    map(o => o.payload),
-    switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATALOG_URL}?${o}`).pipe(
+    map(o => o.payload.itemId),
+    switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATALOG_URL}/${o}`).pipe(
         map(o => loadProductSuccess(o)),
         catchError(e => of(loadProductFailure(e))),
     )),
@@ -62,14 +62,13 @@ export const loadProductEpic = action$ => action$.pipe(
 
 export const placeOrderEpic = (action$, state$) => action$.pipe(
     ofType(PLACE_ORDER_REQUEST),
-    map(o => {
-        const body = {
-            categoryId: state$.value.catalog.category,
-            offset: state$.value.catalog.offset,
-            q: state$.value.catalog.search,
-        }
-    }),
-    switchMap(o => ajax.post(`${process.env.REACT_APP_PLACE_ORDER_URL}`, o.body).pipe(
+    switchMap(o => ajax.post(
+        `${process.env.REACT_APP_PLACE_ORDER_URL}`,
+        {
+            owner: state$.value.cart.owner,
+            items: state$.value.cart.items,
+        },
+        { 'Content-type': 'application/json; charset=UTF-8' }).pipe(
         map(o => placeOrderSuccess(o)),
         catchError(e => of(placeOrderFailure(e))),
     )),
