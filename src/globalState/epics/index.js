@@ -1,58 +1,47 @@
-import { ofType }                     from 'redux-observable';
-import { ajax }                                             from 'rxjs/ajax';
-import { map, switchMap, catchError, debounceTime, filter } from 'rxjs/operators';
+import { ajax }                                                                from 'rxjs/ajax';
+import { map, switchMap, catchError, debounceTime, filter }                    from 'rxjs/operators';
+import { of }                                                                  from 'rxjs';
+import { placeOrderFailure, placeOrderRequest, placeOrderSuccess }             from '../reducers/cartReducer';
 import {
-    CHANGE_SEARCH_FIELD,
-    LOAD_CATALOG_REQUEST,
-    LOAD_CATEGORIES_REQUEST,
-    LOAD_PRODUCT_REQUEST,
-    LOAD_TOP_SALES_REQUEST,
-    PLACE_ORDER_REQUEST
-} from '../actions/actionTypes';
-import {
-    loadCatalogSuccess,
+    changeSearchField,
     loadCatalogFailure,
-    loadTopSalesSuccess,
-    loadTopSalesFailure,
-    loadCategoriesSuccess,
-    loadCategoriesFailure,
-    loadProductSuccess,
-    loadProductFailure,
-    placeOrderSuccess,
-    placeOrderFailure, loadCatalogRequest,
-} from '../actions/actionCreators';
-import { of }                         from 'rxjs';
+    loadCatalogRequest,
+    loadCatalogSuccess
+}                                                                              from '../reducers/loadCatalogReducer';
+import { loadCategoriesFailure, loadCategoriesRequest, loadCategoriesSuccess } from '../reducers/loadCategoriesReducer';
+import { loadProductFailure, loadProductRequest, loadProductSuccess }          from '../reducers/loadProductReducer';
+import { loadTopSalesFailure, loadTopSalesRequest, loadTopSalesSuccess }       from '../reducers/loadTopSalesReducer';
 
 export const loadTopSalesEpic = action$ => action$.pipe(
-    ofType(LOAD_TOP_SALES_REQUEST),
-    switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_TOP_SALES_URL}`).pipe(
+    filter(loadTopSalesRequest.match),
+    switchMap(() => ajax.getJSON(`${process.env.REACT_APP_LOAD_TOP_SALES_URL}`).pipe(
         map(o => loadTopSalesSuccess(o)),
         catchError(e => of(loadTopSalesFailure(e))),
     )),
 );
 
 export const loadCategoriesEpic = action$ => action$.pipe(
-    ofType(LOAD_CATEGORIES_REQUEST),
-    switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATEGORIES_URL}`).pipe(
+    filter(loadCategoriesRequest.match),
+    switchMap(() => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATEGORIES_URL}`).pipe(
         map(o => loadCategoriesSuccess(o)),
         catchError(e => of(loadCategoriesFailure(e))),
     )),
 );
 
 export const changeSearchEpic = action$ => action$.pipe(
-    ofType(CHANGE_SEARCH_FIELD),
-    map(o => o.payload.search.trim()),
+    filter(changeSearchField.match),
+    map(o => o.payload.trim()),
     filter(o => o !== ''),
     debounceTime(1000),
     map(o => loadCatalogRequest(o))
 )
 
 export const loadCatalogEpic = (action$, state$) => action$.pipe(
-    ofType(LOAD_CATALOG_REQUEST),
-    map(o => new URLSearchParams({
-                                     categoryId: state$.value.catalog.category,
-                                     offset: state$.value.catalog.offset,
-                                     q: state$.value.catalog.search,
+    filter(loadCatalogRequest.match),
+    map(() => new URLSearchParams({
+                                     categoryId: state$.value.catalog.category ?? 0,
+                                     offset: state$.value.catalog.offset?? 0,
+                                     q: state$.value.catalog.search ?? '',
                                  })),
     switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATALOG_URL}?${o}`).pipe(
         debounceTime(1000),
@@ -62,8 +51,8 @@ export const loadCatalogEpic = (action$, state$) => action$.pipe(
 );
 
 export const loadProductEpic = action$ => action$.pipe(
-    ofType(LOAD_PRODUCT_REQUEST),
-    map(o => o.payload.itemId),
+    filter(loadProductRequest.match),
+    map(o => o.payload),
     switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATALOG_URL}/${o}`).pipe(
         map(o => loadProductSuccess(o)),
         catchError(e => of(loadProductFailure(e))),
@@ -71,8 +60,8 @@ export const loadProductEpic = action$ => action$.pipe(
 );
 
 export const placeOrderEpic = (action$, state$) => action$.pipe(
-    ofType(PLACE_ORDER_REQUEST),
-    switchMap(o => ajax.post(
+    filter(placeOrderRequest.match),
+    switchMap(() => ajax.post(
         `${process.env.REACT_APP_PLACE_ORDER_URL}`,
         {
             owner: state$.value.cart.owner,

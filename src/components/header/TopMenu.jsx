@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate }              from 'react-router';
 import { useState }                 from 'react';
-import { changeSearchField }        from '../../globalState/actions/actionCreators';
+import { changeSearchField }        from '../../globalState/reducers/loadCatalogReducer';
 import { HeaderControls }           from './HeaderControls';
 import { HeaderSearchForm }         from './HeaderSearchForm';
 import { Logo }                     from './Logo';

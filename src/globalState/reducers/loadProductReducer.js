@@ -1,8 +1,4 @@
-import {
-    LOAD_PRODUCT_REQUEST,
-    LOAD_PRODUCT_FAILURE,
-    LOAD_PRODUCT_SUCCESS,
-} from '../actions/actionTypes'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     product: {
@@ -29,30 +25,39 @@ const initialState = {
     error: null,
 };
 
-export default function loadProductReducer(state = initialState, action) {
-    switch (action.type) {
-        case LOAD_PRODUCT_REQUEST:
-            return {
-                ...state,
-                loading: true,
-                error: null,
-            };
-        case LOAD_PRODUCT_FAILURE:
-            const { error } = action.payload;
-            return {
-                ...state,
-                loading: false,
-                error,
-            };
-        case LOAD_PRODUCT_SUCCESS:
-            const { product } = action.payload;
-            return {
-                ...state,
-                product,
-                loading: false,
-                error: null,
-            };
-        default:
-            return state;
-    }
-}
+export const loadProductReducer = createSlice({
+                                                  name: 'loadProductReducer',
+                                                  initialState: initialState,
+                                                  reducers: {
+                                                      loadProductRequest(state) {
+                                                          return state = {
+                                                              ...state,
+                                                              loading: true,
+                                                              error: null,
+                                                          };
+                                                      },
+                                                      loadProductFailure(state, action) {
+                                                          const  error  = action.payload;
+                                                          return state = {
+                                                              ...state,
+                                                              loading: false,
+                                                              error,
+                                                          };
+                                                      },
+                                                      loadProductSuccess(state, action) {
+                                                          const  product  = action.payload;
+                                                          return state = {
+                                                              ...state,
+                                                              product,
+                                                              loading: false,
+                                                              error: null,
+                                                          };
+                                                      },
+                                                  }
+                                              })
+
+export const {
+    loadProductRequest,
+    loadProductFailure,
+    loadProductSuccess,
+} = loadProductReducer.actions

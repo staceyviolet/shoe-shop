@@ -1,6 +1,4 @@
-import {
-    LOAD_TOP_SALES_REQUEST, LOAD_TOP_SALES_FAILURE, LOAD_TOP_SALES_SUCCESS,
-} from '../actions/actionTypes'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     topSales: [],
@@ -8,30 +6,32 @@ const initialState = {
     error: null,
 };
 
-export default function loadTopSalesReducer(state = initialState, action) {
-    switch (action.type) {
-        case LOAD_TOP_SALES_REQUEST:
-            return {
-                ...state,
-                loading: true,
-                error: null,
-            };
-        case LOAD_TOP_SALES_FAILURE:
-            const { error } = action.payload;
-            return {
-                ...state,
-                loading: false,
-                error,
-            };
-        case LOAD_TOP_SALES_SUCCESS:
-            const { topSales } = action.payload;
-            return {
-                ...state,
-                topSales,
-                loading: false,
-                error: null,
-            };
-        default:
-            return state;
-    }
-}
+export const loadTopSalesReducer = createSlice({
+                                                   name: 'loadTopSalesReducer',
+                                                   initialState: initialState,
+                                                   reducers: {
+                                                       loadTopSalesRequest(state) {
+                                                           return state = { ...state, loading: true }
+                                                       },
+                                                       loadTopSalesFailure(state, action) {
+                                                           const error = action.payload;
+                                                           return state = { ...state, loading: false, error: error }
+                                                       },
+                                                       loadTopSalesSuccess(state, action) {
+                                                           const topSales = action.payload
+                                                           return state = {
+                                                               ...state,
+                                                               topSales: topSales,
+                                                               loading: false,
+                                                               error: null
+                                                           }
+
+                                                       },
+                                                   }
+                                               })
+
+export const {
+    loadTopSalesRequest,
+    loadTopSalesFailure,
+    loadTopSalesSuccess,
+} = loadTopSalesReducer.actions

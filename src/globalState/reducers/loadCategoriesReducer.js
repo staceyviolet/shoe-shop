@@ -1,8 +1,4 @@
-import {
-    LOAD_CATEGORIES_REQUEST,
-    LOAD_CATEGORIES_FAILURE,
-    LOAD_CATEGORIES_SUCCESS,
-} from '../actions/actionTypes'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     categories: [],
@@ -10,30 +6,39 @@ const initialState = {
     error: null,
 };
 
-export default function loadCategoriesReducer(state = initialState, action) {
-    switch (action.type) {
-        case LOAD_CATEGORIES_REQUEST:
-            return {
-                ...state,
-                loading: true,
-                error: null,
-            };
-        case LOAD_CATEGORIES_FAILURE:
-            const { error } = action.payload;
-            return {
-                ...state,
-                loading: false,
-                error,
-            };
-        case LOAD_CATEGORIES_SUCCESS:
-            const { categories } = action.payload;
-            return {
-                ...state,
-                categories,
-                loading: false,
-                error: null,
-            };
-        default:
-            return state;
-    }
-}
+export const loadCategoriesReducer = createSlice({
+                                                     name: 'loadCategoriesReducer',
+                                                     initialState: initialState,
+                                                     reducers: {
+                                                         loadCategoriesRequest(state) {
+                                                             return state = {
+                                                                 ...state,
+                                                                 loading: true,
+                                                                 error: null,
+                                                             };
+                                                         },
+                                                         loadCategoriesFailure(state, action) {
+                                                             const error = action.payload;
+                                                             return state = {
+                                                                 ...state,
+                                                                 loading: false,
+                                                                 error,
+                                                             };
+                                                         },
+                                                         loadCategoriesSuccess(state, action) {
+                                                             const categories = action.payload;
+                                                             return state = {
+                                                                 ...state,
+                                                                 categories,
+                                                                 loading: false,
+                                                                 error: null,
+                                                             };
+                                                         },
+                                                     }
+                                                 })
+
+export const {
+    loadCategoriesRequest,
+    loadCategoriesFailure,
+    loadCategoriesSuccess,
+} = loadCategoriesReducer.actions

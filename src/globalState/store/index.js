@@ -1,10 +1,6 @@
-import { createStore, combineReducers, applyMiddleware, compose, } from 'redux';
-import { combineEpics, createEpicMiddleware }                      from 'redux-observable';
-import cartReducer                                                 from '../reducers/cartReducer';
-import loadCatalogReducer                                          from '../reducers/loadCatalogReducer';
-import loadCategoriesReducer                                       from '../reducers/loadCategoriesReducer';
-import loadProductReducer                                          from '../reducers/loadProductReducer';
-import loadTopSalesReducer                                         from '../reducers/loadTopSalesReducer';
+import { applyMiddleware, configureStore } from '@reduxjs/toolkit';
+import { composeWithDevTools }                              from 'redux-devtools-extension';
+import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import {
     changeSearchEpic,
     loadCatalogEpic,
@@ -12,17 +8,12 @@ import {
     loadProductEpic,
     loadTopSalesEpic,
     placeOrderEpic
-}                                                                  from '../epics';
-
-const reducer = combineReducers({
-                                    topSales: loadTopSalesReducer,
-                                    categories: loadCategoriesReducer,
-                                    catalog: loadCatalogReducer,
-                                    cart: cartReducer,
-                                    product: loadProductReducer
-                                });
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+}                                             from '../epics';
+import { cartReducer }                        from '../reducers/cartReducer';
+import { loadCatalogReducer }    from '../reducers/loadCatalogReducer';
+import { loadCategoriesReducer } from '../reducers/loadCategoriesReducer';
+import { loadProductReducer }    from '../reducers/loadProductReducer';
+import { loadTopSalesReducer }   from '../reducers/loadTopSalesReducer';
 
 const epic = combineEpics(
     changeSearchEpic,
@@ -34,11 +25,21 @@ const epic = combineEpics(
 );
 
 const epicMiddleware = createEpicMiddleware();
+const middlewareEnhancer = applyMiddleware(epicMiddleware)
+const enhancers = [middlewareEnhancer]
+const composedEnhancers = composeWithDevTools(...enhancers)
 
-const store = createStore(reducer, composeEnhancers(
-    applyMiddleware(epicMiddleware)
-));
-
+export const store = configureStore({
+                                        reducer: {
+                                            topSales: loadTopSalesReducer.reducer,
+                                            categories: loadCategoriesReducer.reducer,
+                                            catalog: loadCatalogReducer.reducer,
+                                            cart: cartReducer.reducer,
+                                            product: loadProductReducer.reducer
+                                        },
+                                        // middleware: [epicMiddleware],
+                                        enhancers: [composedEnhancers],
+                                    });
 epicMiddleware.run(epic);
 
 export default store;

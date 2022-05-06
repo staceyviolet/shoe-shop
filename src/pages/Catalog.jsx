@@ -1,13 +1,13 @@
 import { useEffect }                from 'react';
 import { ProductCard }              from '../components/ProductCard';
 import { Categories }               from '../components/categories/Categories';
-import { Row }                      from '../layout/Row';
 import {
     changeOffset,
     changeSearchField,
     changeSelectedCategory,
     loadCatalogRequest
-}                                   from '../globalState/actions/actionCreators';
+}                                   from '../globalState/reducers/loadCatalogReducer';
+import { Row }                      from '../layout/Row';
 import { useDispatch, useSelector } from 'react-redux';
 
 export function Catalog({ isPage }) {
@@ -47,29 +47,31 @@ export function Catalog({ isPage }) {
                 </form>
             }
 
-            {!error ? (loading ?
-                       <div className="preloader">
-                           <span></span>
-                           <span></span>
-                           <span></span>
-                           <span></span>
-                       </div>
-                               :
-                       <>
-                           <Categories/>
+            {!error ?
+             (!loading ?
+              <>
+                  <Categories/>
 
-                           <Row>{catalogItems.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>
+                  <Row>{catalogItems.map(item => <ProductCard key={item.id} product={item} isCatalog/>)}</Row>
 
-                           {showMoreButton &&
-                               <div className="text-center">
-                                   <button className="btn btn-outline-primary"
-                                           onClick={handleShowMoreClick}>
-                                       Загрузить ещё
-                                   </button>
-                               </div>
-                           }
-                       </>
-            ) : <p>Упс! Что-то пошло не так</p>}
+                  {showMoreButton &&
+                      <div className="text-center">
+                          <button className="btn btn-outline-primary"
+                                  onClick={handleShowMoreClick}>
+                              Загрузить ещё
+                          </button>
+                      </div>
+                  }
+              </>
+                       :
+              <div className="preloader">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+              </div>
+
+             ) : <p>Упс! Что-то пошло не так</p>}
         </section>
     )
 }
