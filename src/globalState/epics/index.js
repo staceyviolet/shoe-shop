@@ -39,10 +39,10 @@ export const changeSearchEpic = action$ => action$.pipe(
 export const loadCatalogEpic = (action$, state$) => action$.pipe(
     filter(loadCatalogRequest.match),
     map(() => new URLSearchParams({
-                                     categoryId: state$.value.catalog.category ?? 0,
-                                     offset: state$.value.catalog.offset?? 0,
-                                     q: state$.value.catalog.search ?? '',
-                                 })),
+                                      categoryId: state$.value.catalog.selectedCategory ?? 0,
+                                      offset: state$.value.catalog.offset ?? 0,
+                                      q: state$.value.catalog.search ?? '',
+                                  })),
     switchMap(o => ajax.getJSON(`${process.env.REACT_APP_LOAD_CATALOG_URL}?${o}`).pipe(
         debounceTime(1000),
         map(o => loadCatalogSuccess(o)),

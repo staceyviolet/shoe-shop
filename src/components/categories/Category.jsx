@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 
-export function Category({ category, className, onClick }) {
+export function Category({ category, active, onClick }) {
     return (
         <li className="nav-item">
-            <Link className={className}
+            <Link className={!active ? 'nav-link' : 'nav-link active'}
                   to={`#`}
                   onClick={onClick}>
-                {category ? category.title : 'Все'}
+                {category.title}
             </Link>
         </li>
     )

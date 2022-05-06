@@ -4,9 +4,10 @@ const initialState = {
     catalogItems: [],
     loading: false,
     error: null,
-    category: 0,
+    selectedCategory: 0,
     offset: 0,
     search: '',
+    showMoreButtonVisible: false
 };
 
 export const loadCatalogReducer = createSlice({
@@ -30,10 +31,13 @@ export const loadCatalogReducer = createSlice({
                                                       },
                                                       loadCatalogSuccess(state, action) {
                                                           const catalogItems = action.payload;
+                                                          const showMoreButtonVisible = catalogItems.length === 6
+
                                                           const newCatalogItems = state.offset !== 0 ? [...state.catalogItems, ...catalogItems] : catalogItems
                                                           return state = {
                                                               ...state,
                                                               catalogItems: newCatalogItems,
+                                                              showMoreButtonVisible,
                                                               loading: false,
                                                               error: null,
                                                           };
@@ -43,8 +47,8 @@ export const loadCatalogReducer = createSlice({
                                                           return state = { ...state, search }
                                                       },
                                                       changeSelectedCategory(state, action) {
-                                                          const category = action.payload;
-                                                          return state = { ...state, category }
+                                                          const selectedCategory = action.payload;
+                                                          return state = { ...state, selectedCategory }
                                                       },
                                                       changeOffset(state, action) {
                                                           const offset = action.payload;

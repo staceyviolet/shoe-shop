@@ -1,16 +1,16 @@
-import { Row }      from '../layout/Row';
-import { Col }      from '../layout/Col';
-import { Banner }   from '../components/Banner';
-import { TopSales } from '../components/homePage/TopSales';
-import { Catalog }  from './Catalog';
+import { CatalogContainer }  from '../components/catalog/CatalogContainer';
+import { TopSalesContainer } from '../components/homePage/TopSalesContainer';
+import { Row }               from '../layout/Row';
+import { Col }               from '../layout/Col';
+import { Banner }            from '../components/Banner';
 
 export function HomePage() {
     return (
         <Row>
             <Col>
                 <Banner/>
-                <TopSales/>
-                <Catalog/>
+                <TopSalesContainer/>
+                <CatalogContainer/>
             </Col>
         </Row>
     )

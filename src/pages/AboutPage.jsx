@@ -2,7 +2,7 @@ import { Row }    from '../layout/Row';
 import { Col }    from '../layout/Col';
 import { Banner } from '../components/Banner';
 
-export function About() {
+export function AboutPage() {
     return (
         <Row>
             <Col>

@@ -1,4 +1,13 @@
-export function OrderForm({ owner, onChange, onSubmit }) {
+import { useSelector } from 'react-redux';
+import { Loader }      from '../Loader';
+
+export function OrderForm({ onChange, onSubmit }) {
+    const { owner, loading } = useSelector((store) => store.cart)
+
+    if (loading) {
+        return <Loader/>
+    }
+
     return (
         <form className="card-body" onSubmit={onSubmit}>
             <div className="form-group">

@@ -1,7 +1,7 @@
-import {Row} from "../layout/Row";
-import {Col} from "../layout/Col";
+import { Row } from '../layout/Row';
+import { Col } from '../layout/Col';
 
-export function NotFound() {
+export function NotFoundPage() {
     return (
         <Row>
             <Col>
